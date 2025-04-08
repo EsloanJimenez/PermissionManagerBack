@@ -50,9 +50,10 @@ namespace PermissionManager.Infrastructure.Service
         {
             var permissionToDelete = await _permissionRepository.GetId(id);
 
+            permissionToDelete.Deleted = true;
             permissionToDelete.DeletedDate = DateTime.Now;
 
-            await base.Remove(permissionToDelete);
+            await base.Update(permissionToDelete);
         }
     }
 }
