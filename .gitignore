@@ -1,0 +1,58 @@
+# Build results
+bin/
+obj/
+
+# User-specific files
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# Visual Studio
+.vs/
+
+# Logs
+*.log
+
+# OS-generated files
+.DS_Store
+Thumbs.db
+
+# ASP.NET Core secrets
+secrets.json
+
+# App settings con posibles secretos
+appsettings.Development.json
+
+# NuGet packages
+*.nupkg
+packages/
+
+# IIS Express
+.vsconfig
+.vscode/
+.idea/
+*.launchSettings.json
+
+# Resharper
+_ReSharper*/
+*.DotSettings.user
+
+# Rider
+.idea/
+
+# dotCover
+*.dcvr
+
+# Database files
+*.mdf
+*.ldf
+*.sqlite
+
+# Frontend (si aplica)
+node_modules/
+wwwroot/lib/
+
+# Coverage reports
+coverage/
+*.coverage
