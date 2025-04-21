@@ -8,6 +8,8 @@ namespace PermissionManager.Infrastructure.Configuration
     {
         public void Configure(EntityTypeBuilder<TEntity> builder)
         {
+            builder.HasQueryFilter(x => !x.Deleted);
+
             builder.Property(ba => ba.CreationDate)
                 .HasDefaultValueSql("CURRENT_TIMESTAMP");
 
