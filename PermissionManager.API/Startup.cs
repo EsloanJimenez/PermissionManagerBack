@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using PermissionManager.Domain.Entity;
 using PermissionManager.Domain.Interface.Repository;
 using PermissionManager.Domain.Interface.Service;
 using PermissionManager.Infrastructure.Context;
@@ -48,8 +49,8 @@ namespace PermissionManager.API
             });
 
             #region "TRANSIENT"
-            services.AddTransient<IPermissionRepository, PermissionRepository>();
-            services.AddTransient<IpermissionTypeRepository, PermissionTypeRepository>();
+            services.AddTransient<IBaseRepository<Permission>, BaseRepository<Permission>>();
+            services.AddTransient<IBaseRepository<PermissionType>, BaseRepository<PermissionType>>();
             #endregion
 
             #region "SCOPED"

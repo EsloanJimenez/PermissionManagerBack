@@ -8,6 +8,8 @@ namespace PermissionManager.Domain.Interface.Service
     {
         Task<List<PermissionTypeDTO>> GetAll();
         Task<PermissionTypeDTO> GetById(int id);
+        Task<PermissionTypeDTO> Add(PermissionTypeDTO permission);
+        Task Update(PermissionTypeDTO permission);
+        Task Remove(int id);
     }
-
 }

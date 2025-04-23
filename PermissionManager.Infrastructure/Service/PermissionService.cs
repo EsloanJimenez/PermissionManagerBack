@@ -1,59 +1,74 @@
-﻿using PermissionManager.Domain.DTO;
+﻿using AutoMapper;
+using Microsoft.EntityFrameworkCore;
+using PermissionManager.Domain.DTO;
 using PermissionManager.Domain.Entity;
 using PermissionManager.Domain.Interface.Repository;
 using PermissionManager.Domain.Interface.Service;
-using PermissionManager.Infrastructure.Context;
-using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace PermissionManager.Infrastructure.Service
 {
-    public class PermissionService : BaseService<Permission>, IPermissionService
+    public class PermissionService : IPermissionService
     {
-        private readonly IPermissionRepository _permissionRepository;
-        public PermissionService(IPermissionRepository permissionRepository, AppPermissionContext context) : base(permissionRepository, context)
-        {
-            _permissionRepository = permissionRepository;
-        }
+        private readonly IBaseRepository<Permission> _repository;
+        private readonly IMapper _mapper;
 
+        public PermissionService(IBaseRepository<Permission> repository, IMapper mapper)
+        {
+            _repository = repository;
+            _mapper = mapper;
+        }
         public async Task<List<PermissionDTO>> GetAll()
         {
-            return await _permissionRepository.GetPermission();
+            var query = _repository.GetAll().Select(x => new PermissionDTO
+            {
+                PermissionId = x.PermissionId,
+                FirstName = x.FirstName,
+                LastName = x.LastName,
+                PermissionDate = x.PermissionDate,
+                PermissionTypeId = x.PermissionTypeId,
+
+                Description = x.PermissionTypeNav.Description // esto deberia llamarse PermissionTypeDescription
+            });
+            var dtos = await query.ToListAsync();
+            return dtos;
         }
 
         public async Task<PermissionDTO> GetById(int id)
         {
-            return await _permissionRepository.GetPermissionId(id);
+            var query = _repository.GetAll().Select(x => new PermissionDTO
+            {
+                PermissionId = x.PermissionId,
+                FirstName = x.FirstName,
+                LastName = x.LastName,
+                PermissionDate = x.PermissionDate,
+                PermissionTypeId = x.PermissionTypeId,
+                Description = x.PermissionTypeNav.Description
+            });
+
+            var dto = await query.FirstOrDefaultAsync();
+            return dto;
         }
 
-        public override async Task Save(Permission permission)
+        public virtual async Task<PermissionDTO> Add(PermissionDTO dto)
         {
-            await base.Save(permission);
+            var entity = _mapper.Map<Permission>(dto);
+            await _repository.Add(entity);
+            return _mapper.Map<PermissionDTO>(entity);
         }
 
-        public override async Task Update(Permission permission)
+        public virtual async Task Update(PermissionDTO dto)
         {
-            var permissionToUpdate = await _permissionRepository.GetId(permission.PermissionId);
-
-            permissionToUpdate.FirstName = permission.FirstName;
-            permissionToUpdate.LastName = permission.LastName;
-            permissionToUpdate.PermissionTypeId = permission.PermissionTypeId;
-            permissionToUpdate.PermissionDate = permission.PermissionDate;
-
-            permissionToUpdate.ModifyDate = DateTime.Now;
-
-            await base.Update(permissionToUpdate);
+            var entity = _mapper.Map<Permission>(dto);
+            await _repository.Update(entity);
         }
 
-        public async Task Remove(int id)
+        public virtual async Task Remove(int id)
         {
-            var permissionToDelete = await _permissionRepository.GetId(id);
-
-            permissionToDelete.Deleted = true;
-            permissionToDelete.DeletedDate = DateTime.Now;
-
-            await base.Update(permissionToDelete);
+            var entity = await _repository.GetById(id);
+            await _repository.Remove(entity);
         }
     }
 }

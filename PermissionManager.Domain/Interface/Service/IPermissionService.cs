@@ -1,5 +1,4 @@
 ﻿using PermissionManager.Domain.DTO;
-using PermissionManager.Domain.Entity;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -9,9 +8,8 @@ namespace PermissionManager.Domain.Interface.Service
     {
         Task<List<PermissionDTO>> GetAll();
         Task<PermissionDTO> GetById(int id);
-        Task Save(Permission permission);
-        Task Update(Permission permission);
+        Task<PermissionDTO> Add(PermissionDTO permission);
+        Task Update(PermissionDTO permission);
         Task Remove(int id);
     }
-
 }

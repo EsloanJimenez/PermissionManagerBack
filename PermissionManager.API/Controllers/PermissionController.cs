@@ -1,10 +1,7 @@
-﻿using AutoMapper;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using PermissionManager.Domain.DTO;
-using PermissionManager.Domain.Entity;
 using PermissionManager.Domain.Interface.Service;
 using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace PermissionManager.API.Controllers
@@ -14,11 +11,9 @@ namespace PermissionManager.API.Controllers
     public class PermissionController : ControllerBase
     {
         private readonly IPermissionService _permissionService;
-        private readonly IMapper _mapper;
-        public PermissionController(IPermissionService permissionService, IMapper mapper)
+        public PermissionController(IPermissionService permissionService)
         {
             _permissionService = permissionService;
-            _mapper = mapper;
         }
 
         [HttpGet]
@@ -26,12 +21,11 @@ namespace PermissionManager.API.Controllers
         {
             try
             {
-                var permission = await _permissionService.GetAll();
+                var permissions = await _permissionService.GetAll();
 
-                var permissionDTO = _mapper.Map<IEnumerable<PermissionDTO>>(permission);
-
-                return Ok(permissionDTO);
-            }catch(ArgumentException ex)
+                return Ok(permissions);
+            }
+            catch (ArgumentException ex)
             {
                 return BadRequest(new { messge = ex.Message });
             }
@@ -45,18 +39,11 @@ namespace PermissionManager.API.Controllers
                 if (permissionDTO is null)
                     return BadRequest("La entidad no puede ser nula.");
 
-                var permission = new Permission
-                {
-                    FirstName = permissionDTO.FirstName,
-                    LastName = permissionDTO.LastName,
-                    PermissionTypeId = permissionDTO.PermissionTypeId,
-                    PermissionDate = permissionDTO.PermissionDate,
-                };
+                permissionDTO = await _permissionService.Add(permissionDTO);
 
-                await _permissionService.Save(permission);
-                return Ok(permission);
+                return Ok(permissionDTO);
             }
-            catch (ArgumentException ex)
+            catch (ArgumentException)
             {
                 return BadRequest();
             }
@@ -70,18 +57,9 @@ namespace PermissionManager.API.Controllers
                 if (permissionDTO is null)
                     return BadRequest("La entidad no puede ser nula.");
 
-                var permission = new Permission
-                {
-                    PermissionId = permissionDTO.PermissionId,
-                    FirstName = permissionDTO.FirstName,
-                    LastName = permissionDTO.LastName,
-                    PermissionTypeId = permissionDTO.PermissionTypeId,
-                    PermissionDate = permissionDTO.PermissionDate,
-                };
+                await _permissionService.Update(permissionDTO);
 
-                await _permissionService.Update(permission);
-
-                return Ok(permission);
+                return NoContent();
             }
             catch (ArgumentException ex)
             {
@@ -97,7 +75,8 @@ namespace PermissionManager.API.Controllers
                 await _permissionService.Remove(id);
 
                 return NoContent();
-            }catch (ArgumentException ex)
+            }
+            catch (ArgumentException ex)
             {
                 return BadRequest(new { message = ex.Message });
             }
