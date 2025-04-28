@@ -20,19 +20,15 @@ namespace PermissionManager.Infrastructure.Repository
         {
             return await _context.Permission
                 .Where(p => !p.Deleted)
-                .Join(_context.PermissionType,
-                    per => per.PermissionTypeId,
-                    perTy => perTy.PermissionTypeId,
-                    (per, perTy) => new {per = per, perTy = perTy})
-                .OrderByDescending(p => p.per.PermissionId)
+                .OrderByDescending(p => p.PermissionId)
                 .Select(p => new PermissionDTO
                 {
-                    PermissionId = p.per.PermissionId,
-                    FirstName = p.per.FirstName,
-                    LastName = p.per.LastName,
-                    PermissionDate = p.per.PermissionDate,
-                    PermissionTypeId = p.per.PermissionTypeId,
-                    Description = p.perTy.Description
+                    PermissionId = p.PermissionId,
+                    FirstName = p.FirstName,
+                    LastName = p.LastName,
+                    PermissionDate = p.PermissionDate,
+                    PermissionTypeId = p.PermissionTypeId,
+                    Description = p.PermissionTypeNav.Description,
                 }).ToListAsync();
         }
 
@@ -40,20 +36,17 @@ namespace PermissionManager.Infrastructure.Repository
         {
             return await _context.Permission
                 .Where(p => !p.Deleted && p.PermissionId == id)
-                .Join(_context.PermissionType,
-                    per => per.PermissionTypeId,
-                    perTy => perTy.PermissionTypeId,
-                    (per, perTy) => new { per = per, perTy = perTy })
-                .OrderByDescending(p => p.per.PermissionId)
+                .OrderByDescending(p => p.PermissionId)
                 .Select(p => new PermissionDTO
                 {
-                    PermissionId = p.per.PermissionId,
-                    FirstName = p.per.FirstName,
-                    LastName = p.per.LastName,
-                    PermissionDate = p.per.PermissionDate,
-                    PermissionTypeId = p.per.PermissionTypeId,
-                    Description = p.perTy.Description
+                    PermissionId = p.PermissionId,
+                    FirstName = p.FirstName,
+                    LastName = p.LastName,
+                    PermissionDate = p.PermissionDate,
+                    PermissionTypeId = p.PermissionTypeId,
+                    Description = p.PermissionTypeNav.Description,
                 }).FirstOrDefaultAsync();
         }
     }
 }
+ 
