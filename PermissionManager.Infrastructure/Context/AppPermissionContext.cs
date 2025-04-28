@@ -1,9 +1,9 @@
-﻿using PermissionManager.Domain.Core;
+﻿using Microsoft.EntityFrameworkCore;
+using PermissionManager.Domain.Core;
 using PermissionManager.Domain.Entity;
 using PermissionManager.Infrastructure.Configuration;
-using Microsoft.EntityFrameworkCore;
-using System.Linq;
 using System;
+using System.Linq;
 
 namespace PermissionManager.Infrastructure.Context
 {
@@ -11,7 +11,7 @@ namespace PermissionManager.Infrastructure.Context
     {
         public AppPermissionContext(DbContextOptions<AppPermissionContext> op) : base(op)
         {
-            
+
         }
 
         public DbSet<Permission> Permission { get; set; }
@@ -22,7 +22,7 @@ namespace PermissionManager.Infrastructure.Context
             modelBuilder.ApplyConfiguration(new PermissionConfiguration());
             modelBuilder.ApplyConfiguration(new PermissionTypeConfiguration());
 
-            foreach(var entityType in modelBuilder.Model.GetEntityTypes().Where(b => typeof(BaseAuditory).IsAssignableFrom(b.ClrType)))
+            foreach (var entityType in modelBuilder.Model.GetEntityTypes().Where(b => typeof(BaseAuditory).IsAssignableFrom(b.ClrType)))
             {
                 var configType = typeof(BaseAuditoriConfiguration<>).MakeGenericType(entityType.ClrType);
                 var configInstance = Activator.CreateInstance(configType);

@@ -1,4 +1,6 @@
-﻿using PermissionManager.Domain.DTO;
+﻿using AutoMapper;
+using Microsoft.EntityFrameworkCore;
+using PermissionManager.Domain.DTO;
 using PermissionManager.Domain.Entity;
 using PermissionManager.Domain.Interface.Repository;
 using PermissionManager.Domain.Interface.Service;
@@ -7,6 +9,7 @@ using System.Threading.Tasks;
 
 namespace PermissionManager.Infrastructure.Service
 {
+<<<<<<< HEAD
     public class PermissionTypeService : BaseService<PermissionType, PermissionTypeDTO>, IPermissionTypeService
     {
         private readonly IpermissionTypeRepository _permissionTypeRepository;
@@ -14,15 +17,49 @@ namespace PermissionManager.Infrastructure.Service
         {
             _permissionTypeRepository = permissionTypeRepository;
         }
+=======
+    public class PermissionTypeService : IPermissionTypeService
+    {
+        private readonly IBaseRepository<PermissionType> _repository;
+        private readonly IMapper _mapper;
+>>>>>>> 0da53cd66c5081af1b4d436208626e79c4d0f748
 
+        public PermissionTypeService(IBaseRepository<PermissionType> repository, IMapper mapper)
+        {
+            _repository = repository;
+            _mapper = mapper;
+        }
         public async Task<List<PermissionTypeDTO>> GetAll()
         {
-            return await _permissionTypeRepository.GetPermissionType();
+            var entities = await _repository.GetAll().ToListAsync();
+            var dtos = _mapper.Map<List<PermissionTypeDTO>>(entities);
+            return dtos;
         }
 
         public async Task<PermissionTypeDTO> GetById(int id)
         {
-            return await _permissionTypeRepository.GetPermissionTypeId(id);
+            var entity = await _repository.GetById(id);
+            var dto = _mapper.Map<PermissionTypeDTO>(entity);
+            return dto;
+        }
+
+        public virtual async Task<PermissionTypeDTO> Add(PermissionTypeDTO dto)
+        {
+            var entity = _mapper.Map<PermissionType>(dto);
+            await _repository.Add(entity);
+            return _mapper.Map<PermissionTypeDTO>(entity);
+        }
+
+        public virtual async Task Update(PermissionTypeDTO dto)
+        {
+            var entity = _mapper.Map<PermissionType>(dto);
+            await _repository.Update(entity);
+        }
+
+        public virtual async Task Remove(int id)
+        {
+            var entity = await _repository.GetById(id);
+            await _repository.Remove(entity);
         }
     }
 }

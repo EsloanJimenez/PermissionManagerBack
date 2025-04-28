@@ -1,9 +1,6 @@
-﻿using AutoMapper;
-using Microsoft.AspNetCore.Mvc;
-using PermissionManager.Domain.DTO;
+﻿using Microsoft.AspNetCore.Mvc;
 using PermissionManager.Domain.Interface.Service;
 using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace PermissionManager.API.Controllers
@@ -13,11 +10,9 @@ namespace PermissionManager.API.Controllers
     public class PermissionTypeController : ControllerBase
     {
         private readonly IPermissionTypeService _permissionTypeService;
-        private readonly IMapper _mapper;
-        public PermissionTypeController(IPermissionTypeService permissionTypeService, IMapper mapper)
+        public PermissionTypeController(IPermissionTypeService permissionTypeService)
         {
             _permissionTypeService = permissionTypeService;
-            _mapper = mapper;
         }
 
         [HttpGet]
@@ -25,13 +20,13 @@ namespace PermissionManager.API.Controllers
         {
             try
             {
-                var permissionType = await _permissionTypeService.GetAll();
-                var permissionTypeDTO = _mapper.Map<IEnumerable<PermissionTypeDTO>>(permissionType);
+                var permissionTypes = await _permissionTypeService.GetAll();
+                return Ok(permissionTypes);
 
-                return Ok(permissionTypeDTO);
-            } catch (ArgumentException ex)
+            }
+            catch (ArgumentException ex)
             {
-                return BadRequest(new {message = ex.Message});
+                return BadRequest(new { message = ex.Message });
             }
         }
     }

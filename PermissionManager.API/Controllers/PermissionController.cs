@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using PermissionManager.Domain.DTO;
-using PermissionManager.Domain.Entity;
 using PermissionManager.Domain.Interface.Service;
 using System;
 using System.Threading.Tasks;
@@ -22,10 +21,16 @@ namespace PermissionManager.API.Controllers
         {
             try
             {
-                var permission = await _permissionService.GetAll();
+                var permissions = await _permissionService.GetAll();
 
+<<<<<<< HEAD
                 return Ok(permission);
             }catch(ArgumentException ex)
+=======
+                return Ok(permissions);
+            }
+            catch (ArgumentException ex)
+>>>>>>> 0da53cd66c5081af1b4d436208626e79c4d0f748
             {
                 return BadRequest(new { messge = ex.Message });
             }
@@ -39,11 +44,17 @@ namespace PermissionManager.API.Controllers
                 if (permissionDTO is null)
                     return BadRequest("La entidad no puede ser nula.");
 
+<<<<<<< HEAD
                 await _permissionService.CreatePermision(permissionDTO);
 
                 return Ok();
+=======
+                permissionDTO = await _permissionService.Add(permissionDTO);
+
+                return Ok(permissionDTO);
+>>>>>>> 0da53cd66c5081af1b4d436208626e79c4d0f748
             }
-            catch (ArgumentException ex)
+            catch (ArgumentException)
             {
                 return BadRequest(new {message = ex.Message});
             }
@@ -57,9 +68,15 @@ namespace PermissionManager.API.Controllers
                 if (permissionDTO is null)
                     return BadRequest("La entidad no puede ser nula.");
 
+<<<<<<< HEAD
                 await _permissionService.UpdatePermision(permissionDTO);
 
                 return Ok();
+=======
+                await _permissionService.Update(permissionDTO);
+
+                return NoContent();
+>>>>>>> 0da53cd66c5081af1b4d436208626e79c4d0f748
             }
             catch (ArgumentException ex)
             {
@@ -75,7 +92,8 @@ namespace PermissionManager.API.Controllers
                 await _permissionService.Remove(permission);
 
                 return NoContent();
-            }catch (ArgumentException ex)
+            }
+            catch (ArgumentException ex)
             {
                 return BadRequest(new { message = ex.Message });
             }
