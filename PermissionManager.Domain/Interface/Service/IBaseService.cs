@@ -1,11 +1,15 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace PermissionManager.Domain.Interface.Service
 {
-    public interface IBaseService<TEntity> where TEntity : class
+    public interface IBaseService<TEntity, TDto> where TEntity : class
     {
-        Task Save(TEntity entity);
+        Task<List<TDto>> GetAll();
+        Task<TDto> GetById(int id);
+        Task Add(TEntity entity);
         Task Update(TEntity entity);
         Task Remove(TEntity entity);
     }
 }
+ 

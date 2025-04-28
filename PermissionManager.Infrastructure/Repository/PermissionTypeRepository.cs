@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using PermissionManager.Domain.DTO;
 using PermissionManager.Domain.Entity;
 using PermissionManager.Domain.Interface.Repository;
@@ -9,9 +10,9 @@ using System.Threading.Tasks;
 
 namespace PermissionManager.Infrastructure.Repository
 {
-    public class PermissionTypeRepository : BaseRepository<PermissionType>, IpermissionTypeRepository
+    public class PermissionTypeRepository : BaseRepository<PermissionType, PermissionTypeDTO>, IpermissionTypeRepository
     {
-        public PermissionTypeRepository(AppPermissionContext context) : base(context)
+        public PermissionTypeRepository(AppPermissionContext context, IMapper mapper) : base(context, mapper)
         {
         }
 

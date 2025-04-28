@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace PermissionManager.Domain.Interface.Repository
 {
-    public interface IpermissionTypeRepository : IBaseRepository<PermissionType>
+    public interface IpermissionTypeRepository : IBaseRepository<PermissionType, PermissionTypeDTO>
     {
         Task<List<PermissionTypeDTO>> GetPermissionType();
         Task<PermissionTypeDTO> GetPermissionTypeId(int id);
